@@ -3,85 +3,196 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <h2 style="color: #0066cc; font-weight: 700;">
-                <i class="fas fa-chart-line"></i> Dashboard
-            </h2>
-            <p style="color: #666;">Selamat datang, <strong>{{ Auth::user()->name }}</strong>!</p>
-        </div>
+    <style>
+        .dashboard-header {
+            background: linear-gradient(135deg, rgba(0, 82, 163, 0.9) 0%, rgba(0, 102, 204, 0.9) 100%),
+                        url('/images/background-dashboard.webp') center/cover;
+            background-blend-mode: overlay;
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card.primary {
+            border-left-color: #0066cc;
+        }
+
+        .stat-card.success {
+            border-left-color: #28a745;
+        }
+
+        .stat-card.warning {
+            border-left-color: #ffc107;
+        }
+
+        .stat-card.danger {
+            border-left-color: #dc3545;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            opacity: 0.15;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 10px 0;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .quick-actions .btn {
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+    </style>
+
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <h1><i class="fas fa-chart-line"></i> Dashboard</h1>
+        <p>Selamat datang, <strong>{{ Auth::user()->name }}</strong>! Kelola ruangan dan peminjaman dengan mudah.</p>
     </div>
 
     <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3 mb-3">
-            <div class="stat-card">
-                <i class="fas fa-door-open" style="font-size: 2rem;"></i>
-                <h3>{{ $totalRooms }}</h3>
-                <p>Total Ruangan</p>
+    <div class="stat-grid">
+        <div class="stat-card primary">
+            <div class="stat-header">
+                <div>
+                    <p class="stat-label">Total Ruangan</p>
+                    <div class="stat-value">{{ $totalRooms }}</div>
+                </div>
+                <i class="fas fa-door-open stat-icon"></i>
             </div>
+            <small class="text-muted">Ruangan yang tersedia</small>
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="stat-card">
-                <i class="fas fa-handshake" style="font-size: 2rem;"></i>
-                <h3>{{ $totalBorrowers }}</h3>
-                <p>Total Peminjam</p>
+        <div class="stat-card success">
+            <div class="stat-header">
+                <div>
+                    <p class="stat-label">Total Peminjam</p>
+                    <div class="stat-value">{{ $totalBorrowers }}</div>
+                </div>
+                <i class="fas fa-handshake stat-icon"></i>
             </div>
+            <small class="text-muted">Peminjaman sepanjang waktu</small>
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="stat-card">
-                <i class="fas fa-clock" style="font-size: 2rem;"></i>
-                <h3>{{ $pendingBorrowers }}</h3>
-                <p>Peminjaman Pending</p>
+        <div class="stat-card warning">
+            <div class="stat-header">
+                <div>
+                    <p class="stat-label">Total User</p>
+                    <div class="stat-value">{{ $totalUsers }}</div>
+                </div>
+                <i class="fas fa-users stat-icon"></i>
             </div>
+            <small class="text-muted">Pengguna sistem</small>
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="stat-card">
-                <i class="fas fa-users" style="font-size: 2rem;"></i>
-                <h3>{{ $totalUsers }}</h3>
-                <p>Total User</p>
+        <div class="stat-card danger">
+            <div class="stat-header">
+                <div>
+                    <p class="stat-label">Peminjaman Pending</p>
+                    <div class="stat-value">{{ $pendingBorrowers }}</div>
+                </div>
+                <i class="fas fa-clock stat-icon"></i>
             </div>
+            <small class="text-muted">Menunggu persetujuan</small>
         </div>
     </div>
 
     <!-- Quick Actions -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-bolt"></i> Aksi Cepat
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3 mb-2">
-                            <a href="/rooms" class="btn btn-primary w-100">
-                                <i class="fas fa-door-open"></i> Kelola Ruangan
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <a href="/borrowers" class="btn btn-primary w-100">
-                                <i class="fas fa-handshake"></i> Kelola Peminjam
-                            </a>
-                        </div>
-                        @if(Auth::user()->isAdmin() || Auth::user()->isToolman())
-                            <div class="col-md-3 mb-2">
-                                <a href="/schedules" class="btn btn-primary w-100">
-                                    <i class="fas fa-calendar-alt"></i> Kelola Jadwal
-                                </a>
-                            </div>
-                        @endif
-                        @if(Auth::user()->isAdmin())
-                            <div class="col-md-3 mb-2">
-                                <a href="/users" class="btn btn-primary w-100">
-                                    <i class="fas fa-users"></i> Kelola User
-                                </a>
-                            </div>
-                        @endif
-                    </div>
-                </div>
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-bolt"></i> Aksi Cepat</h5>
+        </div>
+        <div class="card-body">
+            <div class="quick-actions">
+                @if(Auth::user()->isAdmin())
+                    <a href="/users/create" class="btn btn-outline-primary">
+                        <i class="fas fa-user-plus"></i> Tambah User
+                    </a>
+                @endif
+
+                @if(Auth::user()->isAdmin() || Auth::user()->isSarpras() || Auth::user()->isToolman())
+                    <a href="/rooms/create" class="btn btn-outline-primary">
+                        <i class="fas fa-plus"></i> Tambah Ruangan
+                    </a>
+
+                    <a href="/borrowers/create" class="btn btn-outline-primary">
+                        <i class="fas fa-plus"></i> Tambah Peminjam
+                    </a>
+
+                    <a href="/schedules/create" class="btn btn-outline-primary">
+                        <i class="fas fa-plus"></i> Tambah Jadwal
+                    </a>
+
+                    <a href="{{ route('reports.borrowers-pdf') }}" class="btn btn-outline-success" target="_blank">
+                        <i class="fas fa-file-pdf"></i> Laporan PDF
+                    </a>
+
+                    <a href="{{ route('reports.borrowers-excel') }}" class="btn btn-outline-success">
+                        <i class="fas fa-file-excel"></i> Laporan Excel
+                    </a>
+                @endif
             </div>
         </div>
     </div>

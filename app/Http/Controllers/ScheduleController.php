@@ -9,24 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class ScheduleController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            $user = Auth::user();
-            if (!$user || (!$user->isAdmin() && !$user->isToolman())) {
-                return redirect('/dashboard')->with('error', 'Akses ditolak!');
-            }
-            return $next($request);
-        });
-    }
-
-    // Tampilkan daftar jadwal
     public function index()
     {
         $user = Auth::user();
 
-        if ($user->isAdmin()) {
+        if ($user->role === 'admin') {
             $schedules = Schedule::with('room')->paginate(10);
+        } elseif ($user->role === 'sarpras') {
+            $schedules = Schedule::whereHas('room', function ($query) {
+                $query->where('category_id', 1);
+            })->with('room')->paginate(10);
         } else {
             $schedules = Schedule::whereHas('room', function ($query) use ($user) {
                 $query->where('category_id', $user->category_id);
@@ -36,34 +28,32 @@ class ScheduleController extends Controller
         return view('schedules.index', compact('schedules'));
     }
 
-    // Tampilkan form create jadwal
     public function create()
     {
         $user = Auth::user();
 
-        if ($user->isAdmin()) {
+        if ($user->role === 'admin') {
             $rooms = Room::all();
+        } elseif ($user->role === 'sarpras') {
+            $rooms = Room::where('category_id', 1)->get();
         } else {
             $rooms = Room::where('category_id', $user->category_id)->get();
         }
 
-        $days = Schedule::getDays();
-
-        return view('schedules.create', compact('rooms', 'days'));
+        return view('schedules.create', compact('rooms'));
     }
 
-    // Simpan jadwal baru
     public function store(Request $request)
     {
         $validated = $request->validate([
             'room_id' => 'required|exists:rooms,id',
-            'day' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu',
+            'day' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
             'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
-            'block' => 'required|in:1,2',
-            'semester' => 'required|integer|min:1|max:2',
-            'class_name' => 'nullable|string|max:100',
-            'teacher_name' => 'nullable|string|max:100',
+            'end_time' => 'required|date_format:H:i',
+            'block' => 'required|integer|min:1',
+            'semester' => 'required|integer|min:1|max:6',
+            'class_name' => 'nullable|string|max:255',
+            'teacher_name' => 'nullable|string|max:255',
         ]);
 
         Schedule::create($validated);
@@ -71,38 +61,32 @@ class ScheduleController extends Controller
         return redirect('/schedules')->with('success', 'Jadwal berhasil ditambahkan!');
     }
 
-    // Tampilkan form edit jadwal
     public function edit(Schedule $schedule)
     {
         $user = Auth::user();
 
-        if (!$user->isAdmin() && $schedule->room->category_id !== $user->category_id) {
-            return redirect('/schedules')->with('error', 'Akses ditolak!');
+        if ($user->role === 'admin') {
+            $rooms = Room::all();
+        } elseif ($user->role === 'sarpras') {
+            $rooms = Room::where('category_id', 1)->get();
+        } else {
+            $rooms = Room::where('category_id', $user->category_id)->get();
         }
 
-        $rooms = Room::all();
-        $days = Schedule::getDays();
-
-        return view('schedules.edit', compact('schedule', 'rooms', 'days'));
+        return view('schedules.edit', compact('schedule', 'rooms'));
     }
 
-    // Update jadwal
     public function update(Request $request, Schedule $schedule)
     {
-        $user = Auth::user();
-
-        if (!$user->isAdmin() && $schedule->room->category_id !== $user->category_id) {
-            return redirect('/schedules')->with('error', 'Akses ditolak!');
-        }
-
         $validated = $request->validate([
-            'day' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu',
+            'room_id' => 'required|exists:rooms,id',
+            'day' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
             'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
-            'block' => 'required|in:1,2',
-            'semester' => 'required|integer|min:1|max:2',
-            'class_name' => 'nullable|string|max:100',
-            'teacher_name' => 'nullable|string|max:100',
+            'end_time' => 'required|date_format:H:i',
+            'block' => 'required|integer|min:1',
+            'semester' => 'required|integer|min:1|max:6',
+            'class_name' => 'nullable|string|max:255',
+            'teacher_name' => 'nullable|string|max:255',
         ]);
 
         $schedule->update($validated);
@@ -110,17 +94,9 @@ class ScheduleController extends Controller
         return redirect('/schedules')->with('success', 'Jadwal berhasil diperbarui!');
     }
 
-    // Hapus jadwal
     public function destroy(Schedule $schedule)
     {
-        $user = Auth::user();
-
-        if (!$user->isAdmin() && $schedule->room->category_id !== $user->category_id) {
-            return redirect('/schedules')->with('error', 'Akses ditolak!');
-        }
-
         $schedule->delete();
-
         return redirect('/schedules')->with('success', 'Jadwal berhasil dihapus!');
     }
 }

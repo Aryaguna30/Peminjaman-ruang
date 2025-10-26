@@ -21,10 +21,17 @@
 
                         <div class="form-group mb-3">
                             <label class="form-label" for="room_id">Ruangan</label>
-                            <select class="form-select @error('room_id') is-invalid @enderror" id="room_id" name="room_id" disabled>
-                                <option value="{{ $borrower->room_id }}">{{ $borrower->room->name }}</option>
+                            <select class="form-select @error('room_id') is-invalid @enderror" id="room_id" name="room_id" required>
+                                <option value="">-- Pilih Ruangan --</option>
+                                @foreach($rooms as $room)
+                                    <option value="{{ $room->id }}" {{ old('room_id', $borrower->room_id) == $room->id ? 'selected' : '' }}>
+                                        {{ $room->name }}
+                                    </option>
+                                @endforeach
                             </select>
-                            <small class="text-muted">Ruangan tidak bisa diubah</small>
+                            @error('room_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group mb-3">
@@ -36,17 +43,17 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label class="form-label" for="email">Email</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $borrower->email) }}">
-                            @error('email')
+                            <label class="form-label" for="phone">Nomor Telepon</label>
+                            <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone', $borrower->phone) }}">
+                            @error('phone')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="form-group mb-3">
-                            <label class="form-label" for="phone">Nomor Telepon</label>
-                            <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone', $borrower->phone) }}">
-                            @error('phone')
+                            <label class="form-label" for="class_name">Kelas</label>
+                            <input type="text" class="form-control @error('class_name') is-invalid @enderror" id="class_name" name="class_name" value="{{ old('class_name', $borrower->class_name) }}" placeholder="10-PPLG 1">
+                            @error('class_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -63,7 +70,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label class="form-label" for="borrow_date">Tanggal Peminjaman</label>
-                                    <input type="date" class="form-control @error('borrow_date') is-invalid @enderror" id="borrow_date" name="borrow_date" value="{{ old('borrow_date', $borrower->borrow_date) }}" required>
+                                    <input type="date" class="form-control @error('borrow_date') is-invalid @enderror" id="borrow_date" name="borrow_date" value="{{ old('borrow_date', $borrower->borrow_date->format('Y-m-d')) }}" required>
                                     @error('borrow_date')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -84,7 +91,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label class="form-label" for="return_date">Tanggal Pengembalian</label>
-                                    <input type="date" class="form-control @error('return_date') is-invalid @enderror" id="return_date" name="return_date" value="{{ old('return_date', $borrower->return_date) }}" required>
+                                    <input type="date" class="form-control @error('return_date') is-invalid @enderror" id="return_date" name="return_date" value="{{ old('return_date', $borrower->return_date->format('Y-m-d')) }}" required>
                                     @error('return_date')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -99,19 +106,6 @@
                                     @enderror
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label class="form-label" for="status">Status</label>
-                            <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
-                                <option value="pending" {{ old('status', $borrower->status) == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="approved" {{ old('status', $borrower->status) == 'approved' ? 'selected' : '' }}>Disetujui</option>
-                                <option value="rejected" {{ old('status', $borrower->status) == 'rejected' ? 'selected' : '' }}>Ditolak</option>
-                                <option value="completed" {{ old('status', $borrower->status) == 'completed' ? 'selected' : '' }}>Selesai</option>
-                            </select>
-                            @error('status')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <div class="d-flex gap-2">

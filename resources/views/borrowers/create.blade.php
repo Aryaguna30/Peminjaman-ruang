@@ -6,7 +6,7 @@
     <div class="row mb-4">
         <div class="col-md-12">
             <h2 style="color: #0066cc; font-weight: 700;">
-                <i class="fas fa-plus-circle"></i> Tambah Data Peminjam
+                <i class="fas fa-plus-circle"></i> Tambah Peminjam Baru
             </h2>
         </div>
     </div>
@@ -24,7 +24,7 @@
                                 <option value="">-- Pilih Ruangan --</option>
                                 @foreach($rooms as $room)
                                     <option value="{{ $room->id }}" {{ old('room_id') == $room->id ? 'selected' : '' }}>
-                                        {{ $room->name }} ({{ $room->category->name }})
+                                        {{ $room->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -42,17 +42,17 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label class="form-label" for="email">Email</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}">
-                            @error('email')
+                            <label class="form-label" for="phone">Nomor Telepon</label>
+                            <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}">
+                            @error('phone')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="form-group mb-3">
-                            <label class="form-label" for="phone">Nomor Telepon</label>
-                            <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}">
-                            @error('phone')
+                            <label class="form-label" for="class_name">Kelas (Contoh: 10-PPLG 1, 11-RPL 2)</label>
+                            <input type="text" class="form-control @error('class_name') is-invalid @enderror" id="class_name" name="class_name" value="{{ old('class_name') }}" placeholder="10-PPLG 1">
+                            @error('class_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -105,10 +105,6 @@
                                     @enderror
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle"></i> <strong>Catatan:</strong> Durasi peminjaman maksimal 4 jam.
                         </div>
 
                         <div class="d-flex gap-2">

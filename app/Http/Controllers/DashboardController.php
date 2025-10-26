@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use App\Models\Borrower;
 use App\Models\Schedule;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -13,38 +14,44 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        // Statistik berdasarkan role
-        if ($user->isAdmin()) {
+        // Hitung total berdasarkan role
+        if ($user->role === 'admin') {
             $totalRooms = Room::count();
             $totalBorrowers = Borrower::count();
-            $totalUsers = \App\Models\User::count();
+            $totalUsers = User::count();
+            $totalSchedules = Schedule::count();
             $pendingBorrowers = Borrower::where('status', 'pending')->count();
-        } elseif ($user->isSarpras()) {
-            // Sarpras hanya melihat ruangan umum (category_id = 1)
+        } elseif ($user->role === 'sarpras') {
             $totalRooms = Room::where('category_id', 1)->count();
             $totalBorrowers = Borrower::whereHas('room', function ($query) {
                 $query->where('category_id', 1);
             })->count();
-            $pendingBorrowers = Borrower::whereHas('room', function ($query) {
+            $totalUsers = User::where('role', 'sarpras')->count();
+            $totalSchedules = Schedule::whereHas('room', function ($query) {
                 $query->where('category_id', 1);
-            })->where('status', 'pending')->count();
-            $totalUsers = 1; // Hanya diri sendiri
+            })->count();
+            $pendingBorrowers = Borrower::where('status', 'pending')->whereHas('room', function ($query) {
+                $query->where('category_id', 1);
+            })->count();
         } else {
-            // Toolman hanya melihat ruangan jurusannya
             $totalRooms = Room::where('category_id', $user->category_id)->count();
             $totalBorrowers = Borrower::whereHas('room', function ($query) use ($user) {
                 $query->where('category_id', $user->category_id);
             })->count();
-            $pendingBorrowers = Borrower::whereHas('room', function ($query) use ($user) {
+            $totalUsers = User::where('category_id', $user->category_id)->count();
+            $totalSchedules = Schedule::whereHas('room', function ($query) use ($user) {
                 $query->where('category_id', $user->category_id);
-            })->where('status', 'pending')->count();
-            $totalUsers = 1;
+            })->count();
+            $pendingBorrowers = Borrower::where('status', 'pending')->whereHas('room', function ($query) use ($user) {
+                $query->where('category_id', $user->category_id);
+            })->count();
         }
 
         return view('dashboard.index', compact(
             'totalRooms',
             'totalBorrowers',
             'totalUsers',
+            'totalSchedules',
             'pendingBorrowers'
         ));
     }

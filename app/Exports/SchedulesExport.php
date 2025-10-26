@@ -15,7 +15,7 @@ class SchedulesExport implements FromCollection, WithHeadings, WithStyles
     {
         $user = Auth::user();
 
-        if ($user->isAdmin()) {
+        if ($user->role === 'admin') {
             $schedules = Schedule::with('room')->get();
         } else {
             $schedules = Schedule::whereHas('room', function ($query) use ($user) {

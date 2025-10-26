@@ -10,17 +10,17 @@ return new class extends Migration
     {
         Schema::create('borrowers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('room_id')->constrained()->onDelete('cascade');
-            $table->string('name', 100);
-            $table->string('email', 100)->nullable();
+            $table->foreignId('room_id')->constrained('rooms')->onDelete('cascade');
+            $table->string('name');
+            $table->string('email')->nullable();
             $table->string('phone', 15)->nullable();
+            $table->string('class_name')->nullable(); // Tambah kolom untuk kelas siswa
             $table->text('purpose');
             $table->date('borrow_date');
-            $table->date('return_date');
             $table->time('borrow_time');
+            $table->date('return_date');
             $table->time('return_time');
             $table->enum('status', ['pending', 'approved', 'rejected', 'completed'])->default('pending');
-            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

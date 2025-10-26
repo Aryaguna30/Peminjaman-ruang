@@ -15,9 +15,9 @@ class BorrowersExport implements FromCollection, WithHeadings, WithStyles
     {
         $user = Auth::user();
 
-        if ($user->isAdmin()) {
+        if ($user->role === 'admin') {
             $borrowers = Borrower::with('room')->get();
-        } elseif ($user->isSarpras()) {
+        } elseif ($user->role === 'sarpras') {
             $borrowers = Borrower::whereHas('room', function ($query) {
                 $query->where('category_id', 1);
             })->with('room')->get();
