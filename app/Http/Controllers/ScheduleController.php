@@ -61,6 +61,11 @@ class ScheduleController extends Controller
         return redirect('/schedules')->with('success', 'Jadwal berhasil ditambahkan!');
     }
 
+    public function show(Schedule $schedule)
+    {
+        return view('schedules.show', compact('schedule'));
+    }
+
     public function edit(Schedule $schedule)
     {
         $user = Auth::user();

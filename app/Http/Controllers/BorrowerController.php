@@ -64,13 +64,15 @@ class BorrowerController extends Controller
             'room_id' => 'required|exists:rooms,id',
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:15',
-            'class_name' => 'nullable|string|max:50', // Tambah validasi class_name
+            'class_name' => 'nullable|string|max:50',
             'purpose' => 'required|string',
             'borrow_date' => 'required|date',
             'borrow_time' => 'required|date_format:H:i',
             'return_date' => 'required|date',
             'return_time' => 'required|date_format:H:i',
         ]);
+
+        $validated['user_id'] = Auth::id();
 
         Borrower::create($validated);
 
@@ -79,6 +81,9 @@ class BorrowerController extends Controller
 
     public function edit(Borrower $borrower)
     {
+        $borrower->load('room');
+        $this->authorize('update', $borrower);
+
         $user = Auth::user();
 
         if ($user->role === 'admin') {
@@ -94,11 +99,14 @@ class BorrowerController extends Controller
 
     public function update(Request $request, Borrower $borrower)
     {
+        $borrower->load('room');
+        $this->authorize('update', $borrower);
+
         $validated = $request->validate([
             'room_id' => 'required|exists:rooms,id',
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:15',
-            'class_name' => 'nullable|string|max:50', // Tambah validasi class_name
+            'class_name' => 'nullable|string|max:50',
             'purpose' => 'required|string',
             'borrow_date' => 'required|date',
             'borrow_time' => 'required|date_format:H:i',
@@ -113,18 +121,27 @@ class BorrowerController extends Controller
 
     public function destroy(Borrower $borrower)
     {
+        $borrower->load('room');
+        $this->authorize('delete', $borrower);
+
         $borrower->delete();
         return redirect('/borrowers')->with('success', 'Data peminjam berhasil dihapus!');
     }
 
     public function approve(Borrower $borrower)
     {
+        $borrower->load('room');
+        $this->authorize('approve', $borrower);
+
         $borrower->update(['status' => 'approved']);
         return redirect('/borrowers')->with('success', 'Peminjaman disetujui!');
     }
 
     public function reject(Borrower $borrower)
     {
+        $borrower->load('room');
+        $this->authorize('reject', $borrower);
+
         $borrower->update(['status' => 'rejected']);
         return redirect('/borrowers')->with('success', 'Peminjaman ditolak!');
     }

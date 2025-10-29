@@ -33,6 +33,11 @@ class HallController extends Controller
         return redirect()->route('halls.index')->with('success', 'Aula berhasil ditambahkan');
     }
 
+    public function show(Hall $hall)
+    {
+        return view('halls.show', compact('hall'));
+    }
+
     public function edit(Hall $hall)
     {
         return view('halls.edit', compact('hall'));

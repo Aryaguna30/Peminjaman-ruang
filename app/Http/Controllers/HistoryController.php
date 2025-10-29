@@ -12,12 +12,10 @@ class HistoryController extends Controller
     {
         $user = Auth::user();
         
-        // Ambil data peminjaman yang sudah selesai (status: approved atau rejected)
         $query = Borrower::whereIn('status', ['approved', 'rejected'])
             ->with(['room', 'user'])
             ->orderBy('return_date', 'desc');
 
-        // Filter berdasarkan role
         if ($user->role === 'toolman') {
             $query->where('user_id', $user->id);
         }
@@ -29,6 +27,20 @@ class HistoryController extends Controller
 
     public function show(Borrower $borrower)
     {
+        $user = Auth::user();
+        
+        if ($user->role === 'toolman' && $borrower->user_id !== $user->id) {
+            abort(403, 'Anda tidak memiliki akses ke data ini.');
+        }
+
+        if ($user->role === 'sarpras' && $borrower->room->category_id !== 1) {
+            abort(403, 'Anda tidak memiliki akses ke data ini.');
+        }
+
+        if ($user->role === 'toolman' && $borrower->room->category_id !== $user->category_id) {
+            abort(403, 'Anda tidak memiliki akses ke data ini.');
+        }
+
         return view('history.show', compact('borrower'));
     }
 }

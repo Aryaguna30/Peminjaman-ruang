@@ -16,6 +16,12 @@ class CheckRole
 
         $user = Auth::user();
 
+        if (!$user->is_active) {
+            Auth::logout();
+            $request->session()->invalidate();
+            return redirect('/login')->with('error', 'Akun Anda telah dinonaktifkan.');
+        }
+
         foreach ($roles as $role) {
             if ($user->role === $role) {
                 return $next($request);

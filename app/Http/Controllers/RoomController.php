@@ -44,6 +44,11 @@ class RoomController extends Controller
         return redirect('/rooms')->with('success', 'Ruangan berhasil ditambahkan!');
     }
 
+    public function show(Room $room)
+    {
+        return view('rooms.show', compact('room'));
+    }
+
     public function edit(Room $room)
     {
         $categories = Category::all();
