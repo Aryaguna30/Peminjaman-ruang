@@ -72,7 +72,6 @@ class BorrowerController extends Controller
             'return_time' => 'required|date_format:H:i',
         ]);
 
-        $validated['user_id'] = Auth::id();
 
         Borrower::create($validated);
 

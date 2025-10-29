@@ -40,7 +40,22 @@ class ScheduleController extends Controller
             $rooms = Room::where('category_id', $user->category_id)->get();
         }
 
-        return view('schedules.create', compact('rooms'));
+        $days = [
+        'Senin',
+        'Selasa',
+        'Rabu',
+        'Kamis',
+        'Jumat',
+        'Sabtu',
+        'Minggu'
+    ];
+
+  
+    return view('schedules.create', [
+        'days' => $days,
+        'rooms' => $rooms,  
+    ]);
+
     }
 
     public function store(Request $request)
@@ -67,19 +82,30 @@ class ScheduleController extends Controller
     }
 
     public function edit(Schedule $schedule)
-    {
-        $user = Auth::user();
+{
+    $schedule->load('room');
+    $this->authorize('update', $schedule); // Otorisasi
 
-        if ($user->role === 'admin') {
-            $rooms = Room::all();
-        } elseif ($user->role === 'sarpras') {
-            $rooms = Room::where('category_id', 1)->get();
-        } else {
-            $rooms = Room::where('category_id', $user->category_id)->get();
-        }
+    $user = Auth::user();
 
-        return view('schedules.edit', compact('schedule', 'rooms'));
+    if ($user->role === 'admin') {
+        $rooms = Room::all();
+    } elseif ($user->role === 'sarpras') {
+        $rooms = Room::where('category_id', 1)->get();
+    } else {
+        $rooms = Room::where('category_id', $user->category_id)->get();
     }
+
+    $days = [
+        'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'
+    ];
+
+    return view('schedules.edit', [
+        'schedule' => $schedule, 
+        'rooms' => $rooms,
+        'days' => $days,
+    ]);
+}
 
     public function update(Request $request, Schedule $schedule)
     {

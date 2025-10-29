@@ -35,7 +35,7 @@
 
                         <div class="form-group mb-3">
                             <label class="form-label" for="day">Hari</label>
-                            <select class="form-select @error('day') is-invalid @enderror" id="day" name="day" required>
+                            <select class="form-select @error('day') is-invalid @enderror" id="days" name="day" required>
                                 <option value="">-- Pilih Hari --</option>
                                 @foreach($days as $day)
                                     <option value="{{ $day }}" {{ old('day') == $day ? 'selected' : '' }}>{{ $day }}</option>

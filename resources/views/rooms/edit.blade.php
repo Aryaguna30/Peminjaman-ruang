@@ -21,10 +21,10 @@
 
                         <div class="form-group mb-3">
                             <label class="form-label" for="category_id">Kategori Ruangan</label>
-                            <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id" disabled>
+                            <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required>
                                 <option value="{{ $room->category_id }}">{{ $room->category->name }}</option>
                             </select>
-                            <small class="text-muted">Kategori tidak bisa diubah</small>
+                            
                         </div>
 
                         <div class="form-group mb-3">

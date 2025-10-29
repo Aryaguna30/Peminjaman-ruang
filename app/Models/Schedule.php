@@ -38,6 +38,7 @@ class Schedule extends Model
             'Kamis',
             'Jumat',
             'Sabtu',
+            'Minggu',
         ];
     }
 }

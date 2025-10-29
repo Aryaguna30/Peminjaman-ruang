@@ -37,7 +37,20 @@ class SchedulePolicy
      */
     public function update(User $user, Schedule $schedule): bool
     {
-        return false;
+        // 1. Admin bisa mengedit apa saja
+        if ($user->role === 'admin') {
+            return true;
+        }
+
+        // 2. Sarpras bisa mengedit jadwal di ruangan kategori 1
+        if ($user->role === 'sarpras') {
+            // Pastikan relasi 'room' sudah di-load
+            return $schedule->room->category_id == 1;
+        }
+
+        // 3. Pengguna biasa hanya bisa mengedit jadwal
+        //    di ruangan yang sesuai dengan kategori mereka
+        return $schedule->room->category_id == $user->category_id;
     }
 
     /**

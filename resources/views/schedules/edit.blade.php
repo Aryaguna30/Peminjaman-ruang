@@ -21,10 +21,10 @@
 
                         <div class="form-group mb-3">
                             <label class="form-label" for="room_id">Ruangan</label>
-                            <select class="form-select @error('room_id') is-invalid @enderror" id="room_id" name="room_id" disabled>
+                            <select class="form-select @error('room_id') is-invalid @enderror" id="room_id" name="room_id" required>
                                 <option value="{{ $schedule->room_id }}">{{ $schedule->room->name }}</option>
                             </select>
-                            <small class="text-muted">Ruangan tidak bisa diubah</small>
+        
                         </div>
 
                         <div class="form-group mb-3">
