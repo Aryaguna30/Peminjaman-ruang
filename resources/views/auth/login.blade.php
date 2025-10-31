@@ -117,7 +117,7 @@
 <body>
     <div class="login-container">
         <div class="login-header">
-            <i class="fas fa-door-open" style="font-size: 2.5rem; margin-bottom: 10px;"></i>
+            
             <h1>Ruang Nekat</h1>
             <p>SMKN 1 Katapang</p>
         </div>
@@ -155,11 +155,7 @@
 
             <hr style="margin: 30px 0;">
 
-            <p style="text-align: center; color: #666; font-size: 0.9rem;">
-                <strong>Demo Credentials:</strong><br>
-                Email: admin@ruangnekat.com<br>
-                Password: password
-            </p>
+        
         </div>
     </div>
 

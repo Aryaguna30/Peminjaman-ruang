@@ -186,11 +186,11 @@
                     </a>
 
                     <a href="{{ route('reports.borrowers-pdf') }}" class="btn btn-outline-success" target="_blank">
-                        <i class="fas fa-file-pdf"></i> Laporan PDF
+                        <i class="fas fa-file-pdf"></i> Cetak Laporan Peminjam
                     </a>
 
-                    <a href="{{ route('reports.borrowers-excel') }}" class="btn btn-outline-success">
-                        <i class="fas fa-file-excel"></i> Laporan Excel
+                    <a href="{{ route('reports.schedules-pdf') }}" class="btn btn-outline-success" target="_blank">
+                        <i class="fas fa-file-pdf"></i> Cetak Laporan Jadwal
                     </a>
                 @endif
             </div>
