@@ -117,7 +117,7 @@
 <body>
     <div class="login-container">
         <div class="login-header">
-            <i class="fas fa-door-open" style="font-size: 2.5rem; margin-bottom: 10px;"></i>
+            <img src="{{ asset('images/logo.png') }}" alt="Logo SMKN 1 Katapang" style="width: 100px; height: auto; margin-bottom: 15px;">
             <h1>Ruang Nekat</h1>
             <p>SMKN 1 Katapang</p>
         </div>
