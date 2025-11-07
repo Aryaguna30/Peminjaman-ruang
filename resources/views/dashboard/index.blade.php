@@ -5,20 +5,19 @@
 @section('content')
     <style>
         .dashboard-header {
-            background: linear-gradient(135deg, rgba(0, 82, 163, 0.9) 0%, rgba(0, 102, 204, 0.9) 100%),
-                        url('/images/dashboard.png') center/cover;
+            background: url('/images/dashboardFiks.png') center/cover;
             background-blend-mode: overlay;
             color: white;
-            padding: 60px;
+            padding: 100px;
             border-radius: 12px;
             margin-bottom: 30px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .dashboard-header h1 {
-            font-size: 2.5rem;
+        .header h1{
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .dashboard-header p {
@@ -107,9 +106,11 @@
     </style>
 
     <!-- Dashboard Header -->
+    <div class="header">
+        <h1><i class="fas fa-chart-line"></i> Dashboard, <strong>{{ Auth::user()->name }}</strong>!</h1>
+    </div>
+
     <div class="dashboard-header">
-        <h1><i class="fas fa-chart-line"></i> Dashboard</h1>
-        <p>Selamat datang, <strong>{{ Auth::user()->name }}</strong>! Kelola ruangan dan peminjaman dengan mudah.</p>
     </div>
 
     <!-- Statistics Cards -->
