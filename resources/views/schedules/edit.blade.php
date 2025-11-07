@@ -22,9 +22,16 @@
                         <div class="form-group mb-3">
                             <label class="form-label" for="room_id">Ruangan</label>
                             <select class="form-select @error('room_id') is-invalid @enderror" id="room_id" name="room_id" required>
-                                <option value="{{ $schedule->room_id }}">{{ $schedule->room->name }}</option>
+                                <option value="">-- Pilih Ruangan --</option>
+                                @foreach($rooms as $room)
+                                    <option value="{{ $room->id }}" {{ old('room_id', $schedule->room_id) == $room->id ? 'selected' : '' }}>
+                                        {{ $room->name }}
+                                    </option>
+                                @endforeach
                             </select>
-        
+                            @error('room_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group mb-3">

@@ -90,7 +90,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label class="form-label" for="return_date">Tanggal Pengembalian</label>
-                                    <input type="date" class="form-control @error('return_date') is-invalid @enderror" id="return_date" name="return_date" value="{{ old('return_date') }}" required>
+                                    <input type="date" class="form-control @error('return_date') is-invalid @enderror" id="return_date" name="return_date" value="{{ old('return_date') }}" required min="">
                                     @error('return_date')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -98,7 +98,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label class="form-label" for="return_time">Jam Pengembalian</label>
+                                    <label class="form-label" for="return_time">Jam selesai</label>
                                     <input type="time" class="form-control @error('return_time') is-invalid @enderror" id="return_time" name="return_time" value="{{ old('return_time') }}" required>
                                     @error('return_time')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -120,4 +120,10 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('borrow_date').addEventListener('change', function() {
+            document.getElementById('return_date').min = this.value;
+        });
+    </script>
 @endsection

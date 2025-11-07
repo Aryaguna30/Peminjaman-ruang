@@ -68,8 +68,10 @@ class BorrowerController extends Controller
             'purpose' => 'required|string',
             'borrow_date' => 'required|date',
             'borrow_time' => 'required|date_format:H:i',
-            'return_date' => 'required|date',
+            'return_date' => 'required|date|after_or_equal:borrow_date',
             'return_time' => 'required|date_format:H:i',
+        ], [
+            'return_date.after_or_equal' => 'Tanggal pengembalian tidak boleh kurang dari tanggal peminjaman.',
         ]);
 
 
@@ -109,8 +111,10 @@ class BorrowerController extends Controller
             'purpose' => 'required|string',
             'borrow_date' => 'required|date',
             'borrow_time' => 'required|date_format:H:i',
-            'return_date' => 'required|date',
-            'return_time' => 'required|date_format:H:i',
+            'return_date' => 'required|date|after_or_equal:borrow_date',
+            'return_time' => 'nullable|date_format:H:i',
+        ], [
+            'return_date.after_or_equal' => 'Tanggal pengembalian tidak boleh kurang dari tanggal peminjaman.',
         ]);
 
         $borrower->update($validated);
