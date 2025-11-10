@@ -23,6 +23,101 @@
         </div>
     @endif
 
+    <!-- Add filter section -->
+    <div class="card mb-4">
+        <div class="card-header" style="background-color: #0066cc; color: white;">
+            <h5 class="mb-0"><i class="fas fa-filter"></i> Filter Pencarian</h5>
+        </div>
+        <div class="card-body">
+            <form method="GET" action="/borrowers" class="row g-3">
+                <div class="col-md-3">
+                    <label for="name" class="form-label">Nama Peminjam</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Cari nama..." value="{{ request('name') }}">
+                </div>
+
+                <div class="col-md-3">
+                    <label for="room_id" class="form-label">Ruangan</label>
+                    <select class="form-select" id="room_id" name="room_id">
+                        <option value="">-- Semua Ruangan --</option>
+                        @foreach($rooms as $room)
+                            <option value="{{ $room->id }}" {{ request('room_id') == $room->id ? 'selected' : '' }}>
+                                {{ $room->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="class_name" class="form-label">Kelas</label>
+                    <input type="text" class="form-control" id="class_name" name="class_name" placeholder="Cari kelas..." value="{{ request('class_name') }}">
+                </div>
+
+                <div class="col-md-2">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">-- Semua Status --</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Disetujui</option>
+                        <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Selesai</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Cari
+                    </button>
+                </div>
+            </form>
+
+            <div class="row g-2 mt-2">
+                <div class="col-md-12">
+                    <details class="border rounded p-3" style="background-color: #f8f9fa;">
+                        <summary style="cursor: pointer; color: #0066cc; font-weight: 600;">
+                            <i class="fas fa-calendar"></i> Filter Lanjutan (Berdasarkan Tanggal)
+                        </summary>
+                        <form method="GET" action="/borrowers" class="mt-3">
+                            <!-- Preserve existing filters -->
+                            <input type="hidden" name="name" value="{{ request('name') }}">
+                            <input type="hidden" name="room_id" value="{{ request('room_id') }}">
+                            <input type="hidden" name="status" value="{{ request('status') }}">
+                            <input type="hidden" name="class_name" value="{{ request('class_name') }}">
+
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="borrow_date_from" class="form-label">Dari Tanggal</label>
+                                    <input type="date" class="form-control" id="borrow_date_from" name="borrow_date_from" value="{{ request('borrow_date_from') }}">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="borrow_date_to" class="form-label">Sampai Tanggal</label>
+                                    <input type="date" class="form-control" id="borrow_date_to" name="borrow_date_to" value="{{ request('borrow_date_to') }}">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-success w-100">
+                                        <i class="fas fa-check"></i> Terapkan
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Add reset filter button -->
+            @if(request()->anyFilled(['name', 'room_id', 'status', 'class_name', 'borrow_date_from', 'borrow_date_to']))
+                <div class="mt-3">
+                    <a href="/borrowers" class="btn btn-warning btn-sm">
+                        <i class="fas fa-redo"></i> Reset Filter
+                    </a>
+                </div>
+            @endif
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
