@@ -46,8 +46,6 @@ class ScheduleController extends Controller
         'Rabu',
         'Kamis',
         'Jumat',
-        'Sabtu',
-        'Minggu'
     ];
 
   
@@ -97,7 +95,7 @@ class ScheduleController extends Controller
     }
 
     $days = [
-        'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'
+        'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat',
     ];
 
     return view('schedules.edit', [
