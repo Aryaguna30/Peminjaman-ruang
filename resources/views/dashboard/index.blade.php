@@ -8,7 +8,7 @@
             background: url('/images/dashboardFiks.png') center/cover;
             background-blend-mode: overlay;
             color: white;
-            padding: 100px;
+            padding: 120px;
             border-radius: 12px;
             margin-bottom: 30px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
